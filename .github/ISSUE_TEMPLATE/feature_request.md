@@ -1,7 +1,7 @@
 ---
 name: Feature request 🚀
 about: Suggest an idea.
-title: "Issue: Bug report \U0001F41E"
+title: "Issue: Feature Request \U0001F680"
 labels: enhancement
 assignees: ""
 ---
