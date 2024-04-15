@@ -11,7 +11,7 @@
     <a href="https://github.com/aaron-soto/terminal-app"><strong>Explore the code »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/aaron-soto/terminal-app">View Demo</a>
+    <a href="https://github.com/aaron-soto/terminal-app">View Live Demo</a>
     ·
     <a href="https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=Issue%3A+Bug+report+%F0%9F%90%9E">Report Bug</a>
     ·
