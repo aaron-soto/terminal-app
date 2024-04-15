@@ -1,0 +1,29 @@
+<div class="noise"></div>
+<div class="overlay"></div>
+<div class="page-wrapper">
+  <div class="terminal" #terminalDiv (click)="focusInput()">
+    <p
+      class="output"
+      *ngFor="let line of output"
+      [ngClass]="line.active ? 'active' : ''"
+      [style.margin-bottom.px]="line.spacing ? line.spacing * 2 : null"
+      [innerHTML]="line.text"
+    >
+      {{ line.text }}
+    </p>
+
+    <div *ngIf="isAwaitingInput" class="input-wrapper output">
+      <div class="input">
+        <span class="prompt">$</span>
+        <input
+          #terminalInput
+          [(ngModel)]="input"
+          name="input"
+          onfocus="this.value = this.value;"
+          (keyup.enter)="executeCommand()"
+          autofocus
+        />
+      </div>
+    </div>
+  </div>
+</div>

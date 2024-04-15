@@ -1,0 +1,185 @@
+.base-text-styles {
+  // font-family: "Fira Mono", monospace;
+  // font-family: "Courier New", Courier, monospace;
+  // font-family: "Ubuntu Mono", monospace;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+// Base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  @extend .base-text-styles;
+}
+
+body {
+  background-color: #000;
+  background-image: radial-gradient(#11581e, #041607),
+    url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: rgba(128, 255, 128, 0.8);
+  font-size: 1.5rem;
+  line-height: 1.6rem;
+  text-shadow: 0 0 1px rgba(51, 255, 51, 0.4), 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+// Noise overlay
+.noise {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+  opacity: 0.02;
+}
+
+// Screen overlay
+.overlay {
+  pointer-events: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  background-size: auto 4px;
+  z-index: 1;
+
+  &:before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+      0deg,
+      transparent 0%,
+      rgba(32, 128, 32, 0.2) 2%,
+      rgba(32, 128, 32, 0.8) 3%,
+      rgba(32, 128, 32, 0.2) 3%,
+      transparent 100%
+    );
+    background-repeat: no-repeat;
+    animation: scan 7.5s linear infinite;
+  }
+}
+
+// Keyframe for scan effect
+@keyframes scan {
+  0% {
+    background-position: 0 -100vh;
+  }
+  35%,
+  100% {
+    background-position: 0 100vh;
+  }
+}
+
+// Main page structure
+.page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+// Terminal styling
+.terminal {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  min-height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+// Output text and input styling
+.output {
+  color: rgba(128, 255, 128, 0.8);
+  text-shadow: 0 0 1px rgba(51, 255, 51, 0.4), 0 0 2px rgba(255, 255, 255, 0.8);
+  line-height: 1.7rem;
+  white-space: pre;
+
+  &.active {
+    color: #006aff;
+  }
+}
+
+::selection {
+  background-color: #00ff6e;
+  color: #fff;
+}
+
+span {
+  &.muted {
+    color: #e1e1e1bc;
+  }
+  &.help-command {
+    width: 135px;
+    display: inline-block;
+  }
+  &.response {
+    margin-left: 1.5rem;
+    color: #fee440;
+  }
+  &.user-input {
+    color: #f1faee;
+  }
+  &.white {
+    color: #ffffff;
+  }
+  &.prompt {
+    margin-right: 0.3em;
+    color: #ffffff;
+  }
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.input {
+  display: flex;
+
+  input {
+    @extend .base-text-styles;
+    background-color: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    text-shadow: 0 0 5px #c8c8c8;
+    font-size: 1.5rem;
+    line-height: 1.6rem;
+    padding: 0;
+  }
+}
+
+// Utility styles
+a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 0.1em;
+  text-decoration-color: #e1e1e1a3;
+  position: relative;
+}
