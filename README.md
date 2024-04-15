@@ -1,27 +1,75 @@
-# TerminalApp
+<div align="center">
+  <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Windows_Terminal_logo.svg/2560px-Windows_Terminal_logo.svg.png" alt="Logo" width="80" height="80">
+  </a>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.4.
+  <h3 align="center">Terminal Web App</h3>
 
-## Development server
+  <p align="center">
+    A terminal built from scratch using angular and custom scss styles to make you feel like the ultimate hacker.
+    <br />
+    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    ·
+    <a href="https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=Issue%3A+Bug+report+%F0%9F%90%9E">Report Bug</a>
+    ·
+    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-## Code scaffolding
+## ⚠️ Attention
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This web terminal app is in beta and currently under active development. I recommend checking back at different times as it will be getting updated regularly with new and exciting features.
 
-## Build
+## ⚙️ Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+This terminal can be ran by downloading the code. The project can be ran using:
 
-## Running unit tests
+```shell
+npm install
+npm start
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## ✨ Features
 
-## Running end-to-end tests
+- Fun facts about Me
+- Tips about using the terminal
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 👍 Contribute
 
-## Further help
+If you want to say Thank You and/or support the active development of this web terminal:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+1. Add a GitHub Star to the project.
+2. Support the project by donating a cup of coffee.
+
+## 🖥️ Development
+
+These are the features that I will be implementing in the future, if you have ideas I am always open to new ideas that I can code!
