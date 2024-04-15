@@ -8,14 +8,14 @@
   <p align="center">
     A terminal built from scratch using angular and custom scss styles to make you feel like the ultimate hacker.
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/aaron-soto/terminal-app"><strong>Explore the code »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/aaron-soto/terminal-app">View Demo</a>
     ·
     <a href="https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=Issue%3A+Bug+report+%F0%9F%90%9E">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=Issue%3A+Feature+Request+%F0%9F%9A%80">Request Feature</a>
   </p>
 </div>
 
