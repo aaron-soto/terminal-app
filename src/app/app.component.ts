@@ -115,6 +115,21 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  // A better dots loading animation
+  // "interval": 80,
+  // 	"frames": [
+  // 		"⠋",
+  // 		"⠙",
+  // 		"⠹",
+  // 		"⠸",
+  // 		"⠼",
+  // 		"⠴",
+  // 		"⠦",
+  // 		"⠧",
+  // 		"⠇",
+  // 		"⠏"
+  // 	]
+
   private startLoadingAnimation() {
     const frames = ['|', '/', '-', '\\'];
 
