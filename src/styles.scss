@@ -1,9 +1,28 @@
+body {
+  &.dark-mode {
+    --theme-white: #ffffff;
+    --theme-secondary-white: #9499a4;
+    --theme-yellow: #e5d99a;
+    --theme-green: #4fcd68;
+    --theme-blue: #58b7f3;
+    --theme-bg: #292c34;
+  }
+  &.light-mode {
+    --theme-white: #000000; /* Black for contrast */
+    --theme-secondary-white: #898c96; /* Darker grey for contrast */
+    --theme-yellow: #b8b84f; /* Lighter, soft yellow */
+    --theme-green: #4d965c; /* Lighter, soft green */
+    --theme-blue: #4382ac; /* Lighter, soft blue */
+    --theme-bg: #f0f1f5; /* Light grey background */
+  }
+}
+
 .base-text-styles {
   font-family: monospace;
   font-size: 1.3rem;
   font-weight: 400;
   line-height: 1.5rem;
-  color: rgb(230, 230, 230);
+  color: var(--theme-white);
 }
 
 * {
@@ -19,8 +38,8 @@ body {
 }
 
 body {
-  background-color: #292c34;
-  color: white;
+  background-color: var(--theme-bg);
+  color: var(--theme-white);
 }
 
 .page-wrapper {
@@ -47,7 +66,7 @@ body {
   @extend .base-text-styles;
 
   &.active {
-    color: #4fcd68;
+    color: var(--theme-green);
     position: relative;
 
     &:after {
@@ -55,7 +74,7 @@ body {
       position: absolute;
       display: inline-block;
       transform: rotate(180deg);
-      color: #4fcd68;
+      color: var(--theme-green);
       font-size: 1rem;
       margin: 0 auto;
       margin-left: 0.3rem;
@@ -64,22 +83,22 @@ body {
 }
 
 ::selection {
-  background-color: #c2ce75;
-  color: #000000;
+  background-color: var(--theme-yellow);
+  color: var(--theme-bg);
 }
 
 span {
   &.muted {
-    color: #e5d99a;
+    color: var(--theme-yellow);
   }
   &.curr-dir {
-    color: #58b7f3;
+    color: var(--theme-blue);
   }
   &.curr-in {
-    color: white;
+    color: var(--theme-white);
   }
   &.curr-user {
-    color: #e5d99a;
+    color: var(--theme-yellow);
   }
   &.help-command {
     width: 135px;
@@ -87,17 +106,17 @@ span {
   }
   &.response {
     margin-left: 1.5rem;
-    color: #91c871;
+    color: var(--theme-green);
   }
   &.user-input {
-    color: #919191;
+    color: var(--theme-secondary-white);
   }
   &.highlight {
-    color: #7fd09a;
+    color: var(--theme-green);
   }
   &.prompt {
     margin-right: 0.3em;
-    color: #ffffff;
+    color: var(--theme-white);
   }
 }
 
@@ -124,9 +143,9 @@ span {
 
 // Utility styles
 a {
-  color: #fff;
+  color: var(--theme-white);
   text-decoration: underline;
   text-underline-offset: 0.1em;
-  text-decoration-color: #e1e1e1a3;
+  text-decoration-color: var(--theme-secondary-white);
   position: relative;
 }

@@ -16,7 +16,9 @@
       <div class="input">
         <span class="prompt"
           ><span class="curr-dir"
-            ><span class="curr-user">guest </span>
+            ><span class="curr-user" *ngIf="currentUser"
+              >{{ currentUser }}
+            </span>
             <span class="curr-in">in</span> root</span
           ></span
         >

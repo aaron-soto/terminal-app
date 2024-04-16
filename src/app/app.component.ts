@@ -4,7 +4,9 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
+  ChangeDetectorRef,
 } from '@angular/core';
+import { AuthService } from '@app/services/auth.service';
 import { CommandService } from '@app/services/command.service';
 import { environment } from '@env/environment';
 import { Line } from 'src/data';
@@ -28,10 +30,39 @@ export class AppComponent implements AfterViewInit {
   isSelectingTheme = false;
   optionsIndex = 0; // Index for selecting options
   currentDirectory = '';
+  currentUser = 'guest';
 
-  constructor(private commandService: CommandService) {
+  constructor(
+    private commandService: CommandService,
+    private authService: AuthService,
+    private cdRef: ChangeDetectorRef
+  ) {
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ displayName: user.displayName, email: user.email })
+        );
+        this.currentUser = user.displayName || 'guest';
+      } else {
+        localStorage.removeItem('user');
+        this.currentUser = 'guest';
+      }
+    });
+
     this.addNameBanner();
     this.initializeTerminal();
+    this.initilizeTheme();
+  }
+
+  initilizeTheme() {
+    let theme = localStorage.getItem('theme');
+    if (!theme) {
+      theme = 'dark-mode';
+      localStorage.setItem('theme', theme);
+    }
+
+    document.body.className = theme;
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -73,7 +104,9 @@ export class AppComponent implements AfterViewInit {
 
   private startThemeSelection() {
     this.output.push({
-      text: `<span class="user-input"><span class="curr-user">guest </span><span class="curr-dir"><span class="curr-in">in</span> root</span> ${
+      text: `<span class='user-input'><span class='curr-user'>${
+        this.currentUser
+      } </span><span class='curr-dir'><span class='curr-in'>in</span> root</span> ${
         this.input.split(' ')[0]
       }</span>`,
     });
@@ -83,7 +116,7 @@ export class AppComponent implements AfterViewInit {
     const themeOptions = [
       { text: 'Dark mode', active: false },
       { text: 'Light mode', active: false },
-      { text: 'Old School mode', active: false },
+      // { text: 'Old School mode', active: false },
     ];
 
     themeOptions[0].active = true;
@@ -92,7 +125,9 @@ export class AppComponent implements AfterViewInit {
 
   private async processCommand() {
     this.output.push({
-      text: `<span class="user-input"><span class="curr-user">guest </span><span class="curr-dir"><span class="curr-in">in</span> root</span> ${
+      text: `<span class='user-input'><span class='curr-user'>${
+        this.currentUser
+      } </span><span class="curr-dir"><span class="curr-in">in</span> root</span> ${
         this.input.split(' ')[0]
       }</span>`,
     });
@@ -198,6 +233,11 @@ export class AppComponent implements AfterViewInit {
     this.output[selectedThemeIndex].active = false;
     const selectedTheme = this.output[selectedThemeIndex].text;
 
+    // Update the theme
+    let themeClassName = selectedTheme.toLowerCase().replace(' ', '-');
+    document.body.className = themeClassName;
+    localStorage.setItem('theme', themeClassName);
+
     this.output.push({
       text: `<span class="response">Theme selected: ${selectedTheme}</span>`,
     });
@@ -221,6 +261,18 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.focusInput();
+    this.checkLocalStorageForUser();
+  }
+
+  private checkLocalStorageForUser(): void {
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.currentUser = JSON.parse(user).displayName;
+    } else {
+      this.currentUser = 'guest';
+    }
+
+    this.cdRef.detectChanges();
   }
 
   private addNameBanner(): void {
