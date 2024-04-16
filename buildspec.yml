@@ -7,7 +7,7 @@ phases:
     commands:
       - npm install -g @angular/cli
       - npm install
-    pre_build:
+  pre_build:
     commands:
       - echo "Retrieving environment variables"
       - export API_KEY=$(aws ssm get-parameters --names "/myapp/firebase/apiKey" --with-decryption --query "Parameters[0].Value" --output text)
