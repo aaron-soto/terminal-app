@@ -1,7 +1,7 @@
 <div class="noise"></div>
 <div class="overlay"></div>
 <div class="page-wrapper">
-  <div class="terminal" #terminalDiv (click)="focusInput()">
+  <div class="terminal" #terminalDiv>
     <p
       class="output"
       *ngFor="let line of output"
@@ -14,7 +14,12 @@
 
     <div *ngIf="isAwaitingInput" class="input-wrapper output">
       <div class="input">
-        <span class="prompt">$</span>
+        <span class="prompt"
+          ><span class="curr-dir"
+            ><span class="curr-user">guest </span>
+            <span class="curr-in">in</span> root</span
+          ></span
+        >
         <input
           #terminalInput
           [(ngModel)]="input"

@@ -1,114 +1,163 @@
 import {
   AfterViewInit,
   Component,
-  HostListener,
   ElementRef,
   ViewChild,
+  HostListener,
 } from '@angular/core';
-import { Line, COMMANDS, FUN_FACTS, TIPS } from '../data';
+import { CommandService } from '@app/services/command.service';
 import { environment } from '@env/environment';
+import { Line } from 'src/data';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('terminalInput') inputElement!: ElementRef;
+  @ViewChild('terminalInput') inputElement!: ElementRef<HTMLInputElement>;
   @ViewChild('terminalDiv') terminalDiv!: ElementRef<HTMLDivElement>;
 
   output: Line[] = [];
-  input: string;
-  commands = COMMANDS;
-  tips = TIPS;
-  tipIdx = Math.floor(Math.random() * this.tips.length);
-  funfacts = FUN_FACTS;
+  input = '';
   history: string[] = [];
-  historyIndex = 0;
-  private debounceTimer: any;
-  isAwaitingInput: boolean = true;
-  isSelectingTheme: boolean = false;
+  historyIndex = -1;
+  private debounceTimer: number | null = null;
+  isAwaitingInput = true;
+  isSelectingTheme = false;
+  optionsIndex = 0; // Index for selecting options
+  currentDirectory = '';
 
-  constructor() {
-    this.input = '';
-    this.addBanner();
-    this.output.push(
-      // {
-      //   Example of a line with a link
-      //   text: 'Please try to <a href="#1">go back</a>',
-      // },
-      {
-        text: `Aaron's Portfolio [Version <span class="white">${environment.version}</span>]`,
-        spacing: 2,
-      },
-      {
-        text: '2024 AyeZeeWebDesigns LLC. All rights reserved.',
-        spacing: 8,
-      },
-      {
-        text: 'Welcome to the terminal! Type <span class="muted">HELP</span> for a list of commands.',
-      }
-    );
-  }
-
-  nextTip() {
-    this.tipIdx = (this.tipIdx + 1) % this.tips.length;
+  constructor(private commandService: CommandService) {
+    this.addNameBanner();
+    this.initializeTerminal();
   }
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    if (this.history.length === 0) {
-      // If there is no history, do nothing
-      return;
-    }
-
     if (this.isSelectingTheme) {
-      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-        this.output.forEach((line, index) => {
-          if (line.type === 'select') {
-            line.active = false;
-          }
-        });
-        this.output[
-          event.key === 'ArrowUp'
-            ? this.output.length - 2
-            : this.output.length - 1
-        ].active = true;
+      if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+        event.preventDefault();
+        this.navigateOptions(event.key);
+      } else if (event.key === 'Enter') {
+        this.selectTheme();
       }
+    } else {
+      this.handleCommandNavigation(event);
+    }
+  }
 
-      if (event.key === 'Enter') {
-        this.output.forEach((line, index) => {
-          if (line.type === 'select' && line.active) {
-            this.output.push({
-              text: `<span class='response'>selected theme:</span> ${line.text.toLowerCase()}`,
-            });
-            this.isSelectingTheme = false;
-            this.isAwaitingInput = true;
-            line.active = false;
-            this.focusInput();
-          }
-        });
-      }
+  private handleCommandNavigation(event: KeyboardEvent) {
+    if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+      event.preventDefault();
+      this.navigateHistory(event.key);
+    }
+  }
+
+  executeCommand(): void {
+    if (!this.input.trim()) return;
+    this.history.push(this.input);
+    this.historyIndex = this.history.length; // Reset index for new command entry
+
+    if (this.input.toLowerCase() === 'theme') {
+      this.startThemeSelection();
+    } else {
+      this.processCommand();
     }
 
-    if (event.key === 'ArrowUp') {
-      if (this.historyIndex > 0) {
-        this.historyIndex--;
-      } else {
-        this.historyIndex = this.history.length - 1; // Wrap around to the last item
-      }
-      this.focusInput();
-      this.input = this.history[this.historyIndex];
-    }
+    this.input = ''; // Clear input field
+    this.focusInput();
+    this.smoothScrollToBottom(this.terminalDiv.nativeElement);
+  }
 
-    if (event.key === 'ArrowDown') {
-      if (this.historyIndex < this.history.length - 1) {
-        this.historyIndex++;
-      } else {
-        this.historyIndex = 0; // Wrap around to the first item
+  private startThemeSelection() {
+    this.output.push({
+      text: `<span class="user-input"><span class="curr-user">guest </span><span class="curr-dir"><span class="curr-in">in</span> root</span> ${
+        this.input.split(' ')[0]
+      }</span>`,
+    });
+
+    this.isSelectingTheme = true;
+    this.optionsIndex = this.output.length;
+    const themeOptions = [
+      { text: 'Dark mode', active: false },
+      { text: 'Light mode', active: false },
+      { text: 'Old School mode', active: false },
+    ];
+
+    themeOptions[0].active = true;
+    this.output.push(...themeOptions);
+  }
+
+  private processCommand() {
+    const outputText = this.commandService.executeCommand(this.input);
+    this.output.push({
+      text: `<span class="user-input"><span class="curr-user">guest </span><span class="curr-dir"><span class="curr-in">in</span> root</span> ${
+        this.input.split(' ')[0]
+      }</span>`,
+    });
+
+    if (Array.isArray(outputText)) {
+      outputText.forEach((line) => this.output.push({ text: line }));
+    } else {
+      this.output.push({ text: outputText });
+    }
+  }
+
+  navigateHistory(key: string) {
+    if (this.history.length === 0) return; // Exit if no history
+
+    this.historyIndex += key === 'ArrowUp' ? -1 : 1;
+    this.historyIndex =
+      (this.historyIndex + this.history.length) % this.history.length;
+
+    this.input = this.history[this.historyIndex];
+    this.focusInput();
+  }
+
+  navigateOptions(key: string) {
+    const startIdx = this.optionsIndex;
+    const endIdx = this.output.length - 1;
+    let currentActiveIndex = this.output.findIndex(
+      (option, idx) => option.active && idx >= startIdx && idx <= endIdx
+    );
+
+    if (currentActiveIndex !== -1) {
+      this.output[currentActiveIndex].active = false;
+
+      if (key === 'ArrowUp' && currentActiveIndex > startIdx) {
+        currentActiveIndex--;
+      } else if (key === 'ArrowDown' && currentActiveIndex < endIdx) {
+        currentActiveIndex++;
       }
-      this.focusInput();
-      this.input = this.history[this.historyIndex];
+
+      this.output[currentActiveIndex].active = true;
+    }
+  }
+
+  selectTheme() {
+    const selectedThemeIndex = this.output.findIndex((option) => option.active);
+    this.output[selectedThemeIndex].active = false;
+    const selectedTheme = this.output[selectedThemeIndex].text;
+
+    this.output.push({
+      text: `<span class="response">Theme selected: ${selectedTheme}</span>`,
+    });
+
+    this.isSelectingTheme = false;
+    this.focusInput();
+  }
+
+  focusInput() {
+    this.inputElement.nativeElement.focus();
+  }
+
+  smoothScrollToBottom(element: HTMLElement) {
+    if (!this.debounceTimer) {
+      this.debounceTimer = window.setTimeout(() => {
+        element.scrollTop = element.scrollHeight;
+        this.debounceTimer = null;
+      }, 100);
     }
   }
 
@@ -116,40 +165,7 @@ export class AppComponent implements AfterViewInit {
     this.focusInput();
   }
 
-  smoothScrollToBottom(element: any): void {
-    const start = element.scrollTop;
-    const end = element.scrollHeight - element.clientHeight;
-    const change = end - start;
-    const duration = 100; // Duration in milliseconds
-    let startTime: number | null = null;
-
-    const animateScroll = (currentTime: number) => {
-      if (startTime === null) {
-        startTime = currentTime;
-      }
-      const timeElapsed = currentTime - startTime;
-      const nextStep = this.easeInOutQuad(timeElapsed, start, change, duration);
-
-      element.scrollTop = nextStep;
-
-      if (timeElapsed < duration) {
-        requestAnimationFrame(animateScroll);
-      } else {
-        element.scrollTop = end;
-      }
-    };
-
-    requestAnimationFrame(animateScroll);
-  }
-
-  easeInOutQuad(t: number, b: number, c: number, d: number): number {
-    t /= d / 2;
-    if (t < 1) return (c / 2) * t * t + b;
-    t--;
-    return (-c / 2) * (t * (t - 2) - 1) + b;
-  }
-
-  addBanner(): void {
+  private addNameBanner(): void {
     this.output.push(
       {
         text: ' █████╗  █████╗ ██████╗  ██████╗ ███╗   ██╗    ███████╗ ██████╗ ████████╗ ██████╗ ',
@@ -172,96 +188,19 @@ export class AppComponent implements AfterViewInit {
     );
   }
 
-  executeCommand(): void {
-    if (this.input.trim() !== '') {
-      this.output.push({
-        text:
-          '<span class="prompt">$</span>' +
-          `<span class='user-input'>${this.input}</span>`,
-      });
-
-      this.history.push(this.input);
-      this.historyIndex = this.history.length - 1;
-
-      switch (this.input.trim().toLowerCase()) {
-        case 'help':
-          this.commands.forEach((command) => {
-            this.output.push({
-              text: `<span class='help-command response'>${command.command}</span> ${command.help}`,
-            });
-          });
-          this.output.push({
-            text: 'For more information on a specific command, type <span class="muted">HELP</span> command-name',
-            spacing: 4,
-          });
-          break;
-        case 'tip':
-          this.output.push({
-            text: `<span class="response">[TIP]:</span> ${
-              this.tips[this.tipIdx]
-            }`,
-          });
-          this.nextTip();
-          break;
-        case 'hello':
-          this.output.push({
-            text: 'Hello there!',
-          });
-          break;
-        case 'refresh':
-          window.location.reload();
-          break;
-        case 'funfact':
-        case 'fact':
-          this.output.push({
-            text: this.funfacts[
-              Math.floor(Math.random() * this.funfacts.length)
-            ],
-          });
-          break;
-        case '--version':
-        case '--v':
-        case 'version':
-          this.output.push({
-            text: `Terminal: <span class="white">${environment.version}</span>`,
-          });
-          break;
-        case 'theme':
-          this.isAwaitingInput = false;
-          this.isSelectingTheme = true;
-          this.output.push({
-            text: 'Select A theme',
-          });
-          this.output.push({
-            text: 'light',
-            type: 'select',
-            active: true,
-          });
-          this.output.push({
-            text: 'dark',
-            type: 'select',
-            active: false,
-          });
-          break;
-        case 'clear':
-          this.output = [];
-          break;
-        default:
-          this.output.push({
-            text: `'${this.input}' is probably a cool command, but I don’t know it yet. Type help to see what I can do!`,
-          });
+  private initializeTerminal(): void {
+    this.output.push(
+      {
+        text: `Aaron's Portfolio [Version: <span class="highlight">${environment.version}</span>]`,
+        spacing: 2,
+      },
+      {
+        text: '2024 AyeZeeWebDesigns LLC. All rights reserved.',
+        spacing: 8,
+      },
+      {
+        text: 'Welcome to the terminal! Type <span class="muted">HELP</span> for a list of commands.',
       }
-    }
-    if (!this.isSelectingTheme) {
-      setTimeout(() => {
-        this.input = ''; // Clear input
-        this.focusInput(); // Refocus the input field
-        this.smoothScrollToBottom(this.terminalDiv.nativeElement);
-      }, 0);
-    }
-  }
-
-  focusInput() {
-    this.inputElement.nativeElement.focus();
+    );
   }
 }

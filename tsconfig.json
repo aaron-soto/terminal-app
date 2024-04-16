@@ -16,7 +16,7 @@
       "@utils/*": ["src/app/utils/*"],
       "@assets/*": ["src/assets/*"]
     },
-    "strict": true,
+    "strict": false,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
