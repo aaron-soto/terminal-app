@@ -86,8 +86,14 @@ export class CommandService {
   private echo = (args?: string[]): string => args?.join(' ') || '';
 
   private fetch = async (args?: string[]): Promise<string> => {
-    let pos1Arg = args?.[0]; // Adjusted to use optional chaining for safety.
-    const data = await this.weatherService.getWeather('Phoenix').toPromise();
-    return `It currently feels like ${data.current.feelslike_f}°F in Phoenix!`;
+    let pos1Arg = args?.[0];
+
+    if (pos1Arg === 'weather') {
+      const data = await this.weatherService.getWeather('Phoenix').toPromise();
+      return `It currently feels like ${data.current.feelslike_f}°F in Phoenix!`;
+    } else if (pos1Arg === 'joke') {
+      return 'Dad joke here: blah blah blah';
+    }
+    return '';
   };
 }
