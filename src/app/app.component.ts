@@ -18,6 +18,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('terminalInput') inputElement!: ElementRef<HTMLInputElement>;
   @ViewChild('terminalDiv') terminalDiv!: ElementRef<HTMLDivElement>;
 
+  private loadingInterval: any;
   output: Line[] = [];
   input = '';
   history: string[] = [];
@@ -89,19 +90,61 @@ export class AppComponent implements AfterViewInit {
     this.output.push(...themeOptions);
   }
 
-  private processCommand() {
-    const outputText = this.commandService.executeCommand(this.input);
+  private async processCommand() {
     this.output.push({
       text: `<span class="user-input"><span class="curr-user">guest </span><span class="curr-dir"><span class="curr-in">in</span> root</span> ${
         this.input.split(' ')[0]
       }</span>`,
     });
 
-    if (Array.isArray(outputText)) {
-      outputText.forEach((line) => this.output.push({ text: line }));
+    if (this.input.toLowerCase().startsWith('fetch')) {
+      this.startLoadingAnimation();
+      try {
+        const outputText = await this.commandService.executeCommand(this.input);
+        this.stopLoadingAnimation(outputText);
+      } catch (error) {
+        this.stopLoadingAnimation(`Error: ${error.message}`);
+      }
     } else {
-      this.output.push({ text: outputText });
+      const outputText = await this.commandService.executeCommand(this.input);
+      if (Array.isArray(outputText)) {
+        outputText.forEach((line) => this.output.push({ text: line }));
+      } else {
+        this.output.push({ text: outputText });
+      }
     }
+  }
+
+  private startLoadingAnimation() {
+    const frames = ['|', '/', '-', '\\'];
+
+    let frameIndex = 0;
+
+    this.output.push({ text: frames[0] }); // Start with the first frame
+    let lastLineIndex = this.output.length - 1;
+
+    this.loadingInterval = setInterval(() => {
+      this.output[lastLineIndex].text = frames[frameIndex];
+      frameIndex = (frameIndex + 1) % frames.length;
+      this.smoothScrollToBottom(this.terminalDiv.nativeElement);
+    }, 500); // Change frame every 500ms
+  }
+
+  private stopLoadingAnimation(finalMessage: string | string[]) {
+    clearInterval(this.loadingInterval);
+    let lastLineIndex = this.output.length - 1;
+
+    // Clear the loading message
+    this.output.splice(lastLineIndex, 1); // Removes the loading message
+
+    // Check if the message is an array and handle it
+    if (Array.isArray(finalMessage)) {
+      finalMessage.forEach((msg) => this.output.push({ text: msg }));
+    } else {
+      this.output.push({ text: finalMessage });
+    }
+
+    this.smoothScrollToBottom(this.terminalDiv.nativeElement);
   }
 
   navigateHistory(key: string) {

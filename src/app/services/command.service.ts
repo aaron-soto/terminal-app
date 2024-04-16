@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TIPS, FUN_FACTS } from '../../data';
+import { WeatherService } from '@app/services/weather.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,11 +9,12 @@ export class CommandService {
   private commands;
   private additionalCommands;
 
-  constructor() {
+  constructor(private weatherService: WeatherService) {
     this.commands = {
       help: { execute: this.help, helpText: 'Display this help' },
       date: { execute: this.date, helpText: 'Display the current date' },
       echo: { execute: this.echo, helpText: 'Repeat the input' },
+      fetch: { execute: this.fetch, helpText: 'Fetch the current weather' },
       fact: { execute: this.fact, helpText: 'Display a fun fact about Aaron' },
       tip: {
         execute: this.tip,
@@ -24,13 +26,13 @@ export class CommandService {
     };
   }
 
-  executeCommand(input: string): string | string[] {
+  async executeCommand(input: string): Promise<string | string[]> {
     const [command, ...args] = input.split(' ');
-    const commandFunction = this.commands[command].execute;
+    const commandFunction = this.commands[command]?.execute;
 
     if (commandFunction) {
       try {
-        return commandFunction(args);
+        return await commandFunction.call(this, args);
       } catch (error: any) {
         return `Error executing command: ${error.message}`;
       }
@@ -82,4 +84,10 @@ export class CommandService {
   };
 
   private echo = (args?: string[]): string => args?.join(' ') || '';
+
+  private fetch = async (args?: string[]): Promise<string> => {
+    let pos1Arg = args?.[0]; // Adjusted to use optional chaining for safety.
+    const data = await this.weatherService.getWeather('Phoenix').toPromise();
+    return `It currently feels like ${data.current.feelslike_f}°F in Phoenix!`;
+  };
 }
