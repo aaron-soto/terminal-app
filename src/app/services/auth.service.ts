@@ -8,6 +8,7 @@ import {
   User,
   updateProfile,
 } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
@@ -19,38 +20,58 @@ export class AuthService {
 
   constructor(private auth: Auth) {
     this.user$ = new Observable((subscriber) => {
-      onAuthStateChanged(auth, subscriber);
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in, update the local storage or handle authenticated user
+          localStorage.setItem(
+            'user',
+            JSON.stringify({ displayName: user.displayName, email: user.email })
+          );
+        } else {
+          // User is signed out or session expired, handle accordingly
+          if (localStorage.getItem('user')) {
+            localStorage.removeItem('user');
+
+            location.reload();
+          }
+
+          return;
+        }
+        subscriber.next(user);
+      });
     });
   }
 
   // Registration method
-  register(email: string, password: string) {
-    return createUserWithEmailAndPassword(this.auth, email, password).then(
-      (credential) => {
-        // Assuming you want to auto-login the user
-        const user = credential.user;
-        localStorage.setItem(
-          'user',
-          JSON.stringify({ displayName: user.displayName, email: user.email })
-        );
-        return user;
-      }
+  async register(email: string, password: string) {
+    const credential = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
     );
+    // Assuming you want to auto-login the user
+    const user = credential.user;
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ displayName: user.displayName, email: user.email })
+    );
+    return user;
   }
 
   // Login method
-  login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password).then(
-      (credential) => {
-        // Assuming the user object is in credential.user
-        const user = credential.user;
-        localStorage.setItem(
-          'user',
-          JSON.stringify({ displayName: user.displayName, email: user.email })
-        );
-        return user;
-      }
+  async login(email: string, password: string) {
+    const credential = await signInWithEmailAndPassword(
+      this.auth,
+      email,
+      password
     );
+    // Assuming the user object is in credential.user
+    const user = credential.user;
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ displayName: user.displayName, email: user.email })
+    );
+    return user;
   }
 
   // Logout method

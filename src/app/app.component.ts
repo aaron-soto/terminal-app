@@ -10,6 +10,7 @@ import { AuthService } from '@app/services/auth.service';
 import { CommandService } from '@app/services/command.service';
 import { environment } from '@env/environment';
 import { Line } from 'src/data';
+import { WELCOME_MESSAGES } from 'src/data';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,7 @@ export class AppComponent implements AfterViewInit {
   isAwaitingInput = true;
   isSelectingTheme = false;
   optionsIndex = 0; // Index for selecting options
-  currentDirectory = '';
+  currentDirectory = 'root';
   currentUser = 'guest';
 
   constructor(
@@ -93,11 +94,16 @@ export class AppComponent implements AfterViewInit {
 
     if (this.input.toLowerCase() === 'theme') {
       this.startThemeSelection();
+    } else if (this.input.toLowerCase() === 'clear') {
+      this.output = [];
+      this.history = [];
+    } else if (this.input.toLowerCase() === 'reload') {
+      location.reload();
     } else {
       this.processCommand();
     }
 
-    this.input = ''; // Clear input field
+    this.input = '';
     this.focusInput();
     this.smoothScrollToBottom(this.terminalDiv.nativeElement);
   }
@@ -106,9 +112,9 @@ export class AppComponent implements AfterViewInit {
     this.output.push({
       text: `<span class='user-input'><span class='curr-user'>${
         this.currentUser
-      } </span><span class='curr-dir'><span class='curr-in'>in</span> root</span> ${
-        this.input.split(' ')[0]
-      }</span>`,
+      } </span><span class='curr-dir'><span class='curr-in'>in</span> ${
+        this.currentDirectory
+      }</span>: ${this.input.split(' ')[0]}</span>`,
     });
 
     this.isSelectingTheme = true;
@@ -127,9 +133,9 @@ export class AppComponent implements AfterViewInit {
     this.output.push({
       text: `<span class='user-input'><span class='curr-user'>${
         this.currentUser
-      } </span><span class="curr-dir"><span class="curr-in">in</span> root</span> ${
-        this.input.split(' ')[0]
-      }</span>`,
+      } </span><span class="curr-dir"><span class="curr-in">in</span> ${
+        this.currentDirectory
+      }</span>: ${this.input.split(' ')[0]}</span>`,
     });
 
     if (this.input.toLowerCase().startsWith('fetch')) {
@@ -309,8 +315,14 @@ export class AppComponent implements AfterViewInit {
         spacing: 8,
       },
       {
-        text: 'Welcome to the terminal! Type <span class="muted">HELP</span> for a list of commands.',
+        text: WELCOME_MESSAGES[
+          Math.floor(Math.random() * WELCOME_MESSAGES.length)
+        ],
+        spacing: 2,
       }
+      // {
+      //   text: 'Welcome to the terminal! Type <span class="muted">HELP</span> for a list of commands.',
+      // }
     );
   }
 }

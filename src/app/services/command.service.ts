@@ -37,6 +37,8 @@ export class CommandService {
     };
     this.additionalCommands = {
       theme: { helpText: 'Change the terminal theme' },
+      clear: { helpText: 'Clear the terminal screen' },
+      reload: { helpText: 'Reload the terminal screen' },
     };
   }
 
