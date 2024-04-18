@@ -12,7 +12,7 @@
       {{ line.text }}
     </p>
 
-    <div *ngIf="isAwaitingInput" class="input-wrapper output">
+    <div *ngIf="!isSelectingTheme" class="input-wrapper output">
       <div class="input">
         <span class="prompt"
           ><span class="curr-dir"

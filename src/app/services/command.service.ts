@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TIPS, FUN_FACTS } from '../../data';
 import { WeatherService } from '@app/services/weather.service';
 import { AuthService } from '@app/services/auth.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -178,8 +179,15 @@ export class CommandService {
     let pos1Arg = args?.[0];
 
     if (pos1Arg === 'weather') {
-      const data = await this.weatherService.getWeather('Phoenix').toPromise();
-      return `It currently feels like ${data.current.feelslike_f}°F in Phoenix!`;
+      try {
+        const data: any = await firstValueFrom(
+          this.weatherService.getWeather()
+        );
+        return `It currently feels like ${data.current.feelslike_f}°F in Phoenix!`;
+      } catch (error) {
+        console.error('Failed to fetch weather:', error);
+        return 'Failed to fetch weather data.';
+      }
     } else if (pos1Arg === 'joke') {
       return 'Dad joke here: blah blah blah';
     }

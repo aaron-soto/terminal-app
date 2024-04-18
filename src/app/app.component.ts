@@ -10,7 +10,7 @@ import { AuthService } from '@app/services/auth.service';
 import { CommandService } from '@app/services/command.service';
 import { environment } from '@env/environment';
 import { Line } from 'src/data';
-import { WELCOME_MESSAGES } from 'src/data';
+import { WELCOME_MESSAGES, LOADING_INDICATORS } from 'src/data';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +27,7 @@ export class AppComponent implements AfterViewInit {
   history: string[] = [];
   historyIndex = -1;
   private debounceTimer: number | null = null;
-  isAwaitingInput = true;
+  showInputField = true;
   isSelectingTheme = false;
   optionsIndex = 0; // Index for selecting options
   currentDirectory = 'root';
@@ -74,6 +74,7 @@ export class AppComponent implements AfterViewInit {
         this.navigateOptions(event.key);
       } else if (event.key === 'Enter') {
         this.selectTheme();
+        this.showInputField = true;
       }
     } else {
       this.handleCommandNavigation(event);
@@ -93,6 +94,7 @@ export class AppComponent implements AfterViewInit {
     this.historyIndex = this.history.length; // Reset index for new command entry
 
     if (this.input.toLowerCase() === 'theme') {
+      this.showInputField = false;
       this.startThemeSelection();
     } else if (this.input.toLowerCase() === 'clear') {
       this.output = [];
@@ -122,6 +124,11 @@ export class AppComponent implements AfterViewInit {
     const themeOptions = [
       { text: 'Dark mode', active: false },
       { text: 'Light mode', active: false },
+      { text: 'Pastel mode', active: false },
+      { text: 'High Contrast mode', active: false },
+      { text: 'Nature mode', active: false },
+      { text: 'Hacker mode', active: false },
+      { text: 'Ocean mode', active: false },
       // { text: 'Old School mode', active: false },
     ];
 
@@ -156,34 +163,25 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  // A better dots loading animation
-  // "interval": 80,
-  // 	"frames": [
-  // 		"⠋",
-  // 		"⠙",
-  // 		"⠹",
-  // 		"⠸",
-  // 		"⠼",
-  // 		"⠴",
-  // 		"⠦",
-  // 		"⠧",
-  // 		"⠇",
-  // 		"⠏"
-  // 	]
-
   private startLoadingAnimation() {
-    const frames = ['|', '/', '-', '\\'];
-
+    // dots, dots12, arc, bouncingBar, bouncingBall, moon, pong, shark
+    let loadingAnimationSelected = 'dots';
     let frameIndex = 0;
 
-    this.output.push({ text: frames[0] }); // Start with the first frame
+    this.output.push({
+      text: LOADING_INDICATORS[loadingAnimationSelected].frames[0],
+    });
+
     let lastLineIndex = this.output.length - 1;
 
     this.loadingInterval = setInterval(() => {
-      this.output[lastLineIndex].text = frames[frameIndex];
-      frameIndex = (frameIndex + 1) % frames.length;
+      this.output[lastLineIndex].text =
+        LOADING_INDICATORS[loadingAnimationSelected].frames[frameIndex];
+      frameIndex =
+        (frameIndex + 1) %
+        LOADING_INDICATORS[loadingAnimationSelected].frames.length;
       this.smoothScrollToBottom(this.terminalDiv.nativeElement);
-    }, 500); // Change frame every 500ms
+    }, LOADING_INDICATORS[loadingAnimationSelected].interval);
   }
 
   private stopLoadingAnimation(finalMessage: string | string[]) {
@@ -249,6 +247,7 @@ export class AppComponent implements AfterViewInit {
     });
 
     this.isSelectingTheme = false;
+    this.cdRef.detectChanges();
     this.focusInput();
   }
 
@@ -307,7 +306,7 @@ export class AppComponent implements AfterViewInit {
   private initializeTerminal(): void {
     this.output.push(
       {
-        text: `Aaron's Portfolio [Version: <span class="highlight">${environment.version}</span>]`,
+        text: `Aaron's Portfolio [Version: <span class="highlight">${environment.version}</span>] <a target='_blank' href='https://github.com/aaron-soto/terminal-app?tab=readme-ov-file#%F0%9F%91%8D-contribute'>Github Link</a>`,
         spacing: 2,
       },
       {

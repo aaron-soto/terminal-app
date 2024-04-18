@@ -9,10 +9,8 @@ export const baseEnvironment = {
     appId: '1:251749902425:web:89df401eddd1f53bf52948',
     measurementId: 'G-7QEYL01BWF',
   },
-  api: {
-    weather: {
-      base_url: 'http://api.weatherapi.com/v1',
-      api_key: 'b70b4b062c474b159c630639221404',
-    },
+  cognito: {
+    userPoolId: 'us-west-1_Rizxtoilk',
+    userPoolWebClientId: '20s3arob8vb5k3kvq5udgttm6l',
   },
 };

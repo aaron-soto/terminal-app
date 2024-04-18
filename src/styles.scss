@@ -15,6 +15,46 @@ body {
     --theme-blue: #4382ac; /* Lighter, soft blue */
     --theme-bg: #f0f1f5; /* Light grey background */
   }
+  &.pastel-mode {
+    --theme-white: #f4f4f4; /* Very light grey */
+    --theme-secondary-white: #eaeaea; /* Light grey */
+    --theme-yellow: #fcebb6; /* Pastel yellow */
+    --theme-green: #a8d5ba; /* Pastel green */
+    --theme-blue: #a2c4c9; /* Pastel blue */
+    --theme-bg: #ffffff; /* White background */
+  }
+  &.high-contrast-mode {
+    --theme-white: #ffffff; /* Pure white */
+    --theme-secondary-white: #b0b0b0; /* Light gray for secondary elements */
+    --theme-yellow: #ffeb3b; /* Bright yellow */
+    --theme-green: #4caf50; /* Bright green */
+    --theme-blue: #2196f3; /* Bright blue */
+    --theme-bg: #000000; /* Black background */
+  }
+  &.nature-mode {
+    --theme-white: #e6e6e6; /* Soft white */
+    --theme-secondary-white: #c2c2c2; /* Medium grey */
+    --theme-yellow: #d2b45b; /* Earthy yellow */
+    --theme-green: #6c8c4c; /* Forest green */
+    --theme-blue: #7aaab3; /* Sky blue */
+    --theme-bg: #f5f5f5; /* Very light grey */
+  }
+  &.hacker-mode {
+    --theme-white: #77dd77; /* Retro yellow */
+    --theme-secondary-white: #77dd77; /* Pastel red */
+    --theme-yellow: #77dd77; /* Orange-yellow */
+    --theme-green: #77dd77; /* Light green */
+    --theme-blue: #77dd77; /* Periwinkle */
+    --theme-bg: #2b2b2b; /* Antique white */
+  }
+  &.ocean-mode {
+    --theme-white: #f1f8fb; /* Very pale blue */
+    --theme-secondary-white: #d4e4ee; /* Light blue-grey */
+    --theme-yellow: #ffe985; /* Sandy yellow */
+    --theme-green: #3fa9f5; /* Water blue */
+    --theme-blue: #0077be; /* Deep ocean blue */
+    --theme-bg: #aacdd1; /* Pale cyan */
+  }
 }
 
 .base-text-styles {
@@ -80,6 +120,37 @@ body {
       margin-left: 0.3rem;
     }
   }
+
+  a {
+    color: var(--theme-white);
+    text-decoration: underline;
+    text-underline-offset: 0.1em;
+    text-decoration-color: var(--theme-secondary-white);
+    position: relative;
+
+    &:hover,
+    &:focus {
+      color: var(--theme-yellow);
+
+      &:before,
+      &:after {
+        color: var(--theme-yellow);
+        position: absolute;
+      }
+      &::before {
+        content: "[";
+        left: -0.6em;
+      }
+      &::after {
+        content: "]";
+        right: -0.6em;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 ::selection {
@@ -139,13 +210,4 @@ span {
     padding: 0;
     width: 100%;
   }
-}
-
-// Utility styles
-a {
-  color: var(--theme-white);
-  text-decoration: underline;
-  text-underline-offset: 0.1em;
-  text-decoration-color: var(--theme-secondary-white);
-  position: relative;
 }
