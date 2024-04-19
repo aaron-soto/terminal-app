@@ -31,26 +31,13 @@ export class AppComponent implements AfterViewInit {
   isSelectingTheme = false;
   optionsIndex = 0; // Index for selecting options
   currentDirectory = 'root';
-  currentUser = 'guest';
+  currentUser = { email: 'guest' };
 
   constructor(
     private commandService: CommandService,
     private authService: AuthService,
     private cdRef: ChangeDetectorRef
   ) {
-    this.authService.user$.subscribe((user) => {
-      if (user) {
-        localStorage.setItem(
-          'user',
-          JSON.stringify({ displayName: user.displayName, email: user.email })
-        );
-        this.currentUser = user.displayName || 'guest';
-      } else {
-        localStorage.removeItem('user');
-        this.currentUser = 'guest';
-      }
-    });
-
     this.addNameBanner();
     this.initializeTerminal();
     this.initilizeTheme();
@@ -96,6 +83,13 @@ export class AppComponent implements AfterViewInit {
     if (this.input.toLowerCase() === 'theme') {
       this.showInputField = false;
       this.startThemeSelection();
+    } else if (this.input.split(' ')[0].toLowerCase() === 'login') {
+      let email = this.input.split(' ')[1];
+      let password = this.input.split(' ')[2];
+
+      this.login(email, password);
+    } else if (this.input.toLowerCase() === 'logout') {
+      this.logout();
     } else if (this.input.toLowerCase() === 'clear') {
       this.output = [];
       this.history = [];
@@ -110,10 +104,48 @@ export class AppComponent implements AfterViewInit {
     this.smoothScrollToBottom(this.terminalDiv.nativeElement);
   }
 
+  register(email: string, password: string) {
+    this.authService.register(email, password).subscribe({
+      next: (resp) => {
+        this.currentUser = resp.user;
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        console.log('Registered as:', this.currentUser);
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        console.error('Registration failed');
+      },
+    });
+  }
+
+  login(email, password) {
+    this.authService.login(email, password).subscribe({
+      next: (resp) => {
+        this.currentUser = resp.user;
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        console.log('Logged in as:', this.currentUser);
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        console.error('Login failed');
+      },
+    });
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.currentUser = { email: 'guest' };
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        console.log('Logged out');
+      },
+    });
+  }
+
   private startThemeSelection() {
     this.output.push({
       text: `<span class='user-input'><span class='curr-user'>${
-        this.currentUser
+        this.currentUser.email
       } </span><span class='curr-dir'><span class='curr-in'>in</span> ${
         this.currentDirectory
       }</span>: ${this.input.split(' ')[0]}</span>`,
@@ -139,7 +171,7 @@ export class AppComponent implements AfterViewInit {
   private async processCommand() {
     this.output.push({
       text: `<span class='user-input'><span class='curr-user'>${
-        this.currentUser
+        this.currentUser.email
       } </span><span class="curr-dir"><span class="curr-in">in</span> ${
         this.currentDirectory
       }</span>: ${this.input.split(' ')[0]}</span>`,
@@ -266,18 +298,30 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.focusInput();
-    this.checkLocalStorageForUser();
+    this.checkAuthenticationStatus();
   }
 
-  private checkLocalStorageForUser(): void {
-    const user = localStorage.getItem('user');
-    if (user) {
-      this.currentUser = JSON.parse(user).displayName;
-    } else {
-      this.currentUser = 'guest';
-    }
-
-    this.cdRef.detectChanges();
+  checkAuthenticationStatus(): void {
+    // Ideally, your backend should have a route to check the current user's session status
+    // For example, this could be implemented in your backend as an '/auth/status' route
+    this.authService.getSessionStatus().subscribe({
+      next: (response) => {
+        if (response.isAuthenticated) {
+          localStorage.setItem('currentUser', JSON.stringify(response.user));
+          this.currentUser = response.user;
+        } else {
+          this.currentUser = { email: 'guest' };
+          localStorage.setItem(
+            'currentUser',
+            JSON.stringify({ email: 'guest' })
+          );
+        }
+      },
+      error: () => {
+        this.currentUser = { email: 'guest' };
+        localStorage.setItem('currentUser', JSON.stringify({ email: 'guest' }));
+      },
+    });
   }
 
   private addNameBanner(): void {
