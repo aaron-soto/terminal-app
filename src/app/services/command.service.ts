@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TIPS, FUN_FACTS } from '../../data';
+import { TIPS, FUN_FACTS } from '@utils/data';
 import { WeatherService } from '@app/services/weather.service';
-import { AuthService } from '@app/services/auth.service';
 import { firstValueFrom } from 'rxjs';
+import { getRandomItem } from '@utils/helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -52,42 +52,42 @@ export class CommandService {
   }
 
   private help = (): string[] => {
-    let helpTexts = [];
+    const helpTexts = [];
+    const appendHelpTexts = (commandSet: {
+      [key: string]: { helpText: string };
+    }) => {
+      for (const command in commandSet) {
+        helpTexts.push(
+          `<span class="help-command response">${command.toLocaleUpperCase()}</span> ${
+            commandSet[command].helpText
+          }.`
+        );
+      }
+    };
 
-    for (const command in this.commands) {
-      helpTexts.push(
-        `<span class="help-command response">${command.toLocaleUpperCase()}</span> ${
-          this.commands[command].helpText
-        }.`
-      );
-    }
-
-    for (const command in this.additionalCommands) {
-      helpTexts.push(
-        `<span class="help-command response">${command.toLocaleUpperCase()}</span> ${
-          this.additionalCommands[command].helpText
-        }.`
-      );
-    }
+    appendHelpTexts(this.commands);
+    appendHelpTexts(this.additionalCommands);
 
     return helpTexts;
   };
 
-  private fact = (): string =>
-    FUN_FACTS[Math.floor(Math.random() * FUN_FACTS.length)] ||
-    'No fun facts available.';
-
-  private tip = (): string =>
-    TIPS[Math.floor(Math.random() * TIPS.length)] || 'No tips available.';
+  private fact = (): string => {
+    return getRandomItem(FUN_FACTS) || 'No fun facts available.';
+  };
+  private tip = (): string => {
+    return getRandomItem(TIPS) || 'No tips available.';
+  };
 
   private date = (args?: string[]): string => {
     let adjustment = 0;
+
     if (args && args.length > 0) {
       adjustment = parseInt(args[0], 10);
       if (isNaN(adjustment)) {
         return 'Invalid date adjustment. Please provide a number of days.';
       }
     }
+
     const today = new Date();
     today.setDate(today.getDate() + adjustment);
     return today.toLocaleString();

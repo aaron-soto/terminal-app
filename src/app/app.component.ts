@@ -6,11 +6,11 @@ import {
   HostListener,
   ChangeDetectorRef,
 } from '@angular/core';
-import { AuthService } from '@app/services/auth.service';
-import { CommandService } from '@app/services/command.service';
+import { AuthService } from '@services/auth.service';
+import { CommandService } from '@services/command.service';
 import { environment } from '@env/environment';
-import { Line } from 'src/data';
-import { WELCOME_MESSAGES, LOADING_INDICATORS } from 'src/data';
+import { Line } from '@utils/data';
+import { WELCOME_MESSAGES, LOADING_INDICATORS } from '@utils/data';
 
 @Component({
   selector: 'app-root',
