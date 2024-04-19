@@ -92,9 +92,13 @@ export class AppComponent implements AfterViewInit {
       let email = this.input.split(' ')[1];
       let password = this.input.split(' ')[2];
 
-      this.register(email, password);
+      if (this.currentUser.email === 'guest') {
+        this.register(email, password);
+      }
     } else if (this.input.toLowerCase() === 'logout') {
-      this.logout();
+      if (this.currentUser.email !== 'guest') {
+        this.logout();
+      }
     } else if (this.input.toLowerCase() === 'clear') {
       this.output = [];
       this.history = [];
