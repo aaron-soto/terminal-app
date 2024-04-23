@@ -1,116 +1,82 @@
-<div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Windows_Terminal_logo.svg/2560px-Windows_Terminal_logo.svg.png" alt="Logo" width="80" height="80">
-  </a>
+# Web Terminal App 🚀
 
-  <h3 align="center">Terminal Web App</h3>
+## Introduction 👋
 
-  <p align="center">
-    A terminal built from scratch using angular and custom scss styles to make you feel like the ultimate hacker.
-    <br />
-    <a href="https://github.com/aaron-soto/terminal-app"><strong>Explore the code »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/aaron-soto/terminal-app">View Live Demo</a>
-    ·
-    <a href="https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=Issue%3A+Bug+report+%F0%9F%90%9E">Report Bug</a>
-    ·
-    <a href="https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=Issue%3A+Feature+Request+%F0%9F%9A%80">Request Feature</a>
-  </p>
-</div>
+Welcome to my project, **Angular Web Terminal**! This project is part of my personal portfolio. I designed and built this to demonstrate my skills and growth as a developer. Here, you'll find details about the project, how to set it up locally, and the technologies I used.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#⚠️-attention">Attention</a></li>
-    <li><a href="#⚙️-installation">Installation</a></li>
-    <li><a href="#✨-features">Features</a></li>
-    <li><a href="#👍-contribute">Contribute</a></li>
-    <li><a href="#🖥️-development">Development</a></li>
-  </ol>
-</details>
+Feel free to check out the [previous live version here](!https://aaron-soto.github.io/tower-defense/) or the code for that project [here](!https://github.com/aaron-soto/tower-defense).
 
-## ⚠️ Attention
+## Table of Contents 📚
 
-This web terminal app is in beta and currently under active development. I recommend checking back at different times as it will be getting updated regularly with new and exciting features.
+- [Introduction](#introduction-)
+- [Table of Contents](#table-of-contents-)
+- [Project Overview](#project-overview-)
+- [Technologies Used](#technologies-used-)
+- [Features](#features-)
+- [Screenshots](#screenshots-)
+- [Getting Started](#getting-started-)
+- [Code Structure](#code-structure-)
+- [Contributions](#contributions-)
+- [License](#license-)
+- [Contact Info](#contact-info-)
 
-## ⚙️ Installation
+## Project Overview 📖
 
-This terminal can be ran by downloading the code. The project can be ran using:
+This project is a web-based simulator of a traditional terminal interface, built using Angular. It's designed to mimic the behavior of a real terminal without executing actual code. Instead, it responds to a predefined set of custom commands that I've integrated into the application. These commands cover various functionalities such as user authentication, theme customization, and simulated data fetching operations like retrieving weather information.
 
-### npm start
+The application offers an interactive user experience, allowing inputs through keyboard text entries and arrow key selections. This innovative approach not only enhances user engagement but also serves as a unique tool for demonstrating web-based simulations of classic systems. It's an ideal project for exploring the capabilities of Angular in creating dynamic and responsive web applications.
 
-```json
-"start": "ng serve",
+## Technologies Used 🛠️
+
+List all the technologies, libraries, and tools you used to create the project. This might include:
+
+- **JavaScript**
+- **Angular**
+- **SCSS**
+- **FontAwesome** (Game Icons)
+- **Vercel** (Deployment)
+
+## Features ✨
+
+Here are some of the standout features of the project:
+
+- **Command Simulation:** Simulates a real terminal environment by responding to custom predefined commands, providing a realistic terminal experience directly in the browser.
+
+- **User Authentication Commands:** Supports commands related to user authentication, allowing users to simulate login and logout processes.
+
+- **Theme Customization:** Enables users to switch between different visual themes for the terminal, enhancing the user experience and demonstrating dynamic CSS capabilities.
+
+- **Data Fetch Simulation:** Includes example commands for fetching data like current weather conditions, showcasing how to integrate API calls within a simulated terminal environment.
+
+- **Interactive Input Handling:** Accepts user input through text and arrow key selections, providing a tactile and interactive interface similar to an actual terminal.
+
+- **Lightweight and Fast:** Built with performance in mind, ensuring that the simulator is fast and does not burden the browser, even during complex operations.
+
+## Screenshots 📸
+
+![Screenshot 1 Description]()
+
+## Getting Started 🚀
+
+In order to download the code and run this game locally use the following:
+
+```shell
+git clone https://github.com/aaron-soto/terminal-app.git
+cd terminal-app
+npm install
+npm start
 ```
 
-**When to use it:**
+## Contributions 🤝
 
-- Use this script during your regular development activities when you are actively coding and need to see the results immediately in the browser.
-- This command will serve your application with live reloading, meaning any changes you make to the source code will automatically trigger a rebuild of the application and refresh the browser.
+- Please use [this Link](https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=Issue%3A+Bug+report+%F0%9F%90%9E) to report a bug
 
-**Realistic Example:**
+- Please use [this link](https://github.com/aaron-soto/terminal-app/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=Issue%3A+Feature+Request+%F0%9F%9A%80) to request a feature
 
-- You are working on adding a new feature to your application, such as a user profile page. You would run npm start or yarn start to launch the application locally. As you edit your Angular components and services, the application in the browser updates in real-time, allowing you to test changes as you go.
+## License ⚖️
 
-### npm build
+This project is licensed under the MIT License
 
-```json
-"build": "ng build --prod",
-```
+<hr>
 
-**When to use it:**
-
-- Use this script when you are ready to create a production-ready build of your application. This includes minification, uglification, and often ahead-of-time (AOT) compilation. It ensures the build is optimized for performance and size.
-- Typically used before deploying the application to a production environment.
-
-**Realistic Example:**
-
-- You have completed development and testing of the current version of your application and are ready to release it. You would run npm run build or yarn build to generate the production build. Once the build is complete, you deploy the dist/ directory contents to your production server or cloud hosting platform.
-
-### npm build:dev
-
-```json
-"build:dev": "ng build --configuration=development",
-```
-
-**When to use it:**
-
-- Use this script when you need to create a build of your application that is not meant for production but needs a stable version for further testing or for sharing with other developers or testers.
-- This configuration might include more detailed source maps, disabled optimization for easier debugging, and might not replace development environment variables.
-
-**Realistic Example:**
-
-- You are preparing your application for a testing phase where QA engineers will test it in a staging environment that mimics production but does not require production-level optimization. Running npm run build:dev or yarn build:dev creates a build suited for this purpose, facilitating easier debugging and problem resolution.
-
-### npm serve:prod
-
-```json
-"serve:prod": "ng serve --configuration=production"
-```
-
-**When to use it:**
-
-- Use this script when you want to simulate the production environment on your local machine. This is useful for testing how the application will behave in production before actually deploying it.
-- This command serves the application with production settings, which might include different API endpoints, feature toggles, or any other environment-specific settings.
-
-**Realistic Example:**
-
-- Before deploying your application, you decide to run a final check locally using the production configuration to ensure everything works as expected with the production settings. You would run npm run serve:prod or yarn serve:prod to start the local server with the production environment's configuration. This helps catch any last-minute issues that might not have been evident in the development build.
-
-## ✨ Features
-
-- Fun facts about Me
-- Tips about using the terminal
-
-## 👍 Contribute
-
-If you want to say Thank You and/or support the active development of this web terminal:
-
-1. Add a GitHub Star to the project.
-2. Support the project by donating a cup of coffee.
-
-## 🖥️ Development
-
-These are the features that I will be implementing in the future, if you have ideas I am always open to new ideas that I can code!
+Thank you for checking out my project! I hope you find it interesting and feel free to reach out if you have any questions or suggestions!
